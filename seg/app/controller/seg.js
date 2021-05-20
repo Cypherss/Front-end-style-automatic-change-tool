@@ -1,4 +1,7 @@
 'use strict';
+const getComponent = require('../lib/runner/getComponent');
+const UUID = require('uuid');
+const fs = require('fs');
 
 const Controller = require('egg').Controller;
 
@@ -7,21 +10,20 @@ class SegmentationController extends Controller {
         const { ctx } = this;
         const data = ctx.request.body;
 
-        // 异步执行任务，无需等待任务完成
-        const id = res._id;
-        const start = +new Date();
-        getComponent(data)
-            .then(async json => {
-                const file = await fs.write(
-                    JSON.stringify(json),
-                    `${data.site}-${+new Date()}`
-                );
+        await getComponent(data)
+            .then(async node => {
+                let tree = JSON.stringify(node);
+                fs.writeFile('./app/public/' + UUID.v1() + '.json', tree, function(err){
+                    if (err) {console.log(err.message)}
+                    else {console.log('File written success!')}
+                })
             })
             .catch(e => {
-                
+                console.log(e.message);
             });
         ctx.body = {
-            success: true
+            code: 0,
+            message: 'Segmentation Success!'
         };
     }
 }

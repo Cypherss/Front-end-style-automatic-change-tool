@@ -7,8 +7,16 @@
     "declarations": true
   },
   "dependencies": {
+    "browserify": "^17.0.0",
     "egg": "^2.15.1",
-    "egg-scripts": "^2.11.0"
+    "egg-cors": "^2.2.3",
+    "egg-scripts": "^2.11.0",
+    "fs": "*",
+    "postcss": "^8.2.15",
+    "postcss-safe-parser": "^5.0.2",
+    "selenium-webdriver": "*",
+    "urijs": "^1.19.6",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",

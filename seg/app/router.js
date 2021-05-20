@@ -6,5 +6,5 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
-  router.get('/segmentation',controller.seg.seg);
+  router.post('/segmentation',controller.seg.seg);
 };
