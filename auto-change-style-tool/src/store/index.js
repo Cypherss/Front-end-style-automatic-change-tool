@@ -4,17 +4,19 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
+  state: sessionStorage.getItem('state') ? JSON.parse(sessionStorage.getItem('state')):{
     userId: 0,
-    userName: null
+    userName: null,
+    snackbar1: false,
   },
   mutations: {
     login(state, payload){
       state.userId = payload;
+      state.snackbar1 = true;
     },
     fillName(state, payload){
       state.userName = payload;
-    }
+    },
   },
   actions: {
     refresh(context) {
