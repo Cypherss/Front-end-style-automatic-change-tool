@@ -5,7 +5,7 @@ const seg = require('../component/segmentation');
 module.exports = async function (data) {
   const driver = await drivers.getChromeDriver();
   try {
-    const { name, userId, baseUrl, pac } = data;
+    const { name, userId, baseUrl, pac, st } = data;
     await driver.get(baseUrl);
     await searchUsedCSS(driver);
     console.log('seg begin');

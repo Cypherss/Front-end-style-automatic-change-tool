@@ -87,17 +87,17 @@
           </v-col>
 
           <v-col>
-            <v-sheet min-height="70vh" rounded="lg" v-show="show[0]">
+            <v-sheet min-height="80vh" rounded="lg" v-show="show[0]">
               <repo></repo>
             </v-sheet>
-            <v-sheet min-height="70vh" rounded="lg" v-show="show[1]">
+            <v-sheet min-height="80vh" rounded="lg" v-show="show[1]">
               <workflow></workflow>
             </v-sheet>
-            <v-sheet min-height="70vh" rounded="lg" v-show="show[2]">
-              <!--  -->
+            <v-sheet min-height="80vh" rounded="lg" v-show="show[2]">
+              <history></history>
             </v-sheet>
-            <v-sheet min-height="70vh" rounded="lg" v-show="show[3]">
-              <!--  -->
+            <v-sheet min-height="80vh" rounded="lg" v-show="show[3]">
+              <info></info>
             </v-sheet>
           </v-col>
         </v-row>
@@ -112,9 +112,11 @@
 <script>
 import workflow from '../components/workflow'
 import repo from '../components/repo'
+import history from '../components/history'
+import info from '../components/info'
 
 export default {
-  components: { workflow, repo },
+  components: { workflow, repo, history, info },
   data: () => ({
     selectedItem: 0,
     username: "",

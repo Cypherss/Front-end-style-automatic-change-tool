@@ -127,7 +127,7 @@ export default {
   methods: {
     login() {
       this.axios
-        .get(`/user/login?name=${this.name}&password=${this.password}`)
+        .get(`http://localhost:10000/user/login?name=${this.name}&password=${this.password}`)
         .then((res) => {
           if (res.data.success) {
             this.$store.commit("login", res.data.content.id);
@@ -148,7 +148,7 @@ export default {
         return;
       }
       this.axios
-        .post('/user/register',null, {params:{
+        .post('http://localhost:10000/user/register',null, {params:{
           name: this.name1,
           password: this.password1
         }})

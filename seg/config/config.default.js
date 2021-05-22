@@ -26,27 +26,17 @@ module.exports = appInfo => {
   config.security = {
     csrf: {
       enable: false,
-      ignoreJSON: true,
+      ignoreJSON: true
     },
+    domainWhiteList: ['*']
   };
-
-  config.bodyParser = {
-    // enable: true,
-    // formLimit: '300mb',
-    jsonLimit: '300mb',
-    // textLimit: '300mb',
-    // strict: true,
-    // // @see https://github.com/hapijs/qs/blob/master/lib/parse.js#L8 for more options
-    // queryString: {
-    //   arrayLimit: 10000,
-    //   depth: 50,
-    //   parameterLimit: 100000,
-    // }
-  };
-
   config.cors = {
-    origin: '*', allowMethods: 'GET,PUT,POST,DELETE'
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
   };
+
+
+
 
   return {
     ...config,
