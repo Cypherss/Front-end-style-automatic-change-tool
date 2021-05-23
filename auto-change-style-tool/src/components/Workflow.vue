@@ -100,7 +100,61 @@
         </v-stepper-content>
 
         <v-stepper-content step="2">
-          <iframe :src="iframeUrl"></iframe>
+          <v-toolbar
+            color="white"
+            style="font-size: 30px; box-shadow: 0 0 0 !important"
+          >
+            <v-toolbar-title> Result Page: </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn class="mx-2" dark color="#1976d2" @click="reset">
+              reset
+            </v-btn></v-toolbar
+          >
+          <v-divider></v-divider>
+          <iframe
+            id="iframe1"
+            :src="iframeUrl"
+            style="width: 100%; height: 60vh"
+          ></iframe>
+          <br />
+          <v-divider></v-divider>
+          <v-row style="padding: 20px">
+            <v-col cols="8">
+              Dom Tree:
+              <v-treeview
+                rounded
+                hoverable
+                activatable
+                :items="DomTree"
+                item-key="id"
+              >
+                <template #label="{ item }">
+                  <span @click="onItemClick(item)"
+                    >{{ item.tag }} id={{ item.id }}</span
+                  >
+                </template></v-treeview
+              >
+            </v-col>
+            <v-divider vertical></v-divider>
+            <v-col cols="4">
+              <v-textarea
+                outlined
+                name="input-7-1"
+                label="Style Information"
+                v-model="css1"
+                hint="modify your style"
+              ></v-textarea>
+              <v-toolbar
+                color="white"
+                style="font-size: 30px; box-shadow: 0 0 0 !important"
+              >
+                <v-spacer></v-spacer>
+                <v-btn class="mx-2" dark color="#1976d2" @click="submitCss">
+                  submit
+                </v-btn></v-toolbar
+              >
+            </v-col>
+          </v-row>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -130,6 +184,11 @@ export default {
       loading: false,
       targetId: null,
       iframeUrl: "",
+      DomTree: [],
+      htmlName: "",
+      css1: "",
+      time: "",
+      tagId: null,
     };
   },
   mounted() {
@@ -144,8 +203,51 @@ export default {
         pac: this.pac,
       };
     },
+    css1() {
+      return {
+        css1: this.css1,
+      };
+    },
   },
   methods: {
+    submitCss() {
+      this.axios.post('http://localhost:10000/core/adjust', null, {params: {
+        fileId: this.htmlName,
+        id: this.tagId,
+        attribute: this.css1,
+        time: this.time
+      }}).then((res) => {
+        this.htmlName = res.data.content;
+        this.axios
+        .get(`http://localhost:10000/core/url?fileId=${this.htmlName}`)
+        .then((res) => {
+          this.iframeUrl = res.data.content;
+        });
+      })
+    },
+    onItemClick(item) {
+      this.tagId = item.id;
+      this.axios
+        .get(
+          `http://localhost:10000/core/attribute?fileId=${this.htmlName}&tagId=${item.id}`
+        )
+        .then((res) => {
+          this.css1 = res.data.content;
+          console.log(this.css1);
+        });
+    },
+    reset() {
+      this.e1 = 1;
+      this.e6 = 1;
+      this.sourceId = "";
+      this.name = "";
+      this.url = "";
+      this.pac = null;
+      this.iframeUrl = "";
+      this.message = "";
+      this.targetId = null;
+      this.DomTree = [];
+    },
     upload() {
       let res = this.$refs.form.validate();
       if (res) {
@@ -203,6 +305,11 @@ export default {
       this.e1 = 2;
       let res = JSON.parse(this.message);
       this.iframeUrl = res.html;
+      this.DomTree = [res.idDom];
+      this.htmlName = res.targetId;
+      this.time = res.time;
+      console.log(this.DomTree);
+      console.log(res.html);
     },
     closeWebSocket() {
       this.websocket.close();
@@ -225,12 +332,12 @@ export default {
           if (this.message == "fail") {
             this.closeWebSocket();
           } else if (this.message.startsWith("matchSuccess")) {
-            console.log('match success');
+            console.log("match success");
             this.e6 = 3;
             this.sendMessage("replace");
           } else if (this.message.startsWith("replaceSuccess")) {
             console.log(this.message);
-            console.log('replace success');
+            console.log("replace success");
             this.e6 = 4;
             this.sendMessage(
               `rebuild:${this.sourceId}@${this.message.substring(15)}@${
